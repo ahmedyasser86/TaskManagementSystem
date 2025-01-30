@@ -6,4 +6,13 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="DTOs\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TaskManagementSystem.Core\TaskManagementSystem.Core.csproj" />
+    <ProjectReference Include="..\TaskManagementSystem.Infrastructure\TaskManagementSystem.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>
