@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace TaskManagementSystem.Core.Helpers
 {
-    public class APIResponse<T>(bool status, string? message, T? data)
+    public class ResponseBase(bool success, dynamic? data, string? message = null)
     {
-        public bool Status { get; set; } = status;
+        public bool Success { get; set; } = success;
         public string? Message { get; set; } = message;
-        public T? Data { get; set; } = data;
+        public dynamic? Data { get; set; } = data;
     }
 }

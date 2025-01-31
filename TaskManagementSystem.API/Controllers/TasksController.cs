@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 using TaskManagementSystem.Application.Interfaces;
-using TaskManagementSystem.Application.Services;
 using TaskManagementSystem.Core.Entities;
 using TaskManagementSystem.Core.Helpers;
 
@@ -8,6 +9,7 @@ using TaskManagementSystem.Core.Helpers;
 
 namespace TaskManagementSystem.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class TasksController(ITaskService service) : ControllerBase
@@ -18,13 +20,14 @@ namespace TaskManagementSystem.API.Controllers
         [HttpGet]
         public async Task<IActionResult> Get(int page = 1, int pageSize = 15, string? search = null)
         {
-            try
+            var tasks = await service.GetTasks(page, pageSize, search);
+            if (tasks.Success)
             {
-                return Ok(new APIResponse<PaginatedList<TaskEntity>>(true, "Data fetched done", await service.GetTasks(page, pageSize, search)));
+                return Ok(tasks);
             }
-            catch(Exception ex)
+            else
             {
-                return BadRequest(new APIResponse<TaskEntity>(false, ex.Message, null));
+                return BadRequest(tasks);
             }
         }
 
@@ -32,13 +35,14 @@ namespace TaskManagementSystem.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            try
+            var task = await service.GetTaskById(id);
+            if (task.Success)
             {
-                return Ok(new APIResponse<TaskEntity>(true, "Data fetched done", await service.GetTaskById(id)));
+                return Ok(task);
             }
-            catch (Exception ex)
+            else
             {
-                return NotFound(new APIResponse<TaskEntity>(true, ex.Message, null));
+                return BadRequest(task);
             }
         }
 
@@ -47,16 +51,16 @@ namespace TaskManagementSystem.API.Controllers
         public async Task<IActionResult> Post([FromBody] TaskEntity value)
         {
             if (!ModelState.IsValid)
-                return BadRequest(new APIResponse<TaskEntity>(false, "Model is not valid", null));
+                return BadRequest(ModelState);
 
-            try
+            var task = await service.AddTask(value);
+            if (task.Success)
             {
-                var model = await service.AddTask(value);
-                return Ok(new APIResponse<TaskEntity>(true, "Data added done", model));
+                return Ok(task);
             }
-            catch (Exception ex)
+            else
             {
-                return BadRequest(new APIResponse<TaskEntity>(false, ex.Message, null));
+                return BadRequest(task);
             }
         }
 
@@ -65,16 +69,16 @@ namespace TaskManagementSystem.API.Controllers
         public async Task<IActionResult> Put([FromBody] TaskEntity value)
         {
             if (!ModelState.IsValid)
-                return BadRequest(new APIResponse<TaskEntity>(false, "Model is not valid", null));
+                return BadRequest(ModelState);
 
-            try
+            var task = await service.EditTask(value);
+            if (task.Success)
             {
-                var model = await service.EditTask(value);
-                return Ok(new APIResponse<TaskEntity>(true, "Data Updated done", model));
+                return Ok(task);
             }
-            catch (Exception ex)
+            else
             {
-                return BadRequest(new APIResponse<TaskEntity>(false, ex.Message, null));
+                return BadRequest(task);
             }
         }
 
@@ -82,14 +86,14 @@ namespace TaskManagementSystem.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            try
+            var task = await service.DeleteTask(id);
+            if (task.Success)
             {
-                await service.DeleteTask(id);
-                return Ok(new APIResponse<TaskEntity>(true, "Data Deleted done", null));
+                return Ok(task);
             }
-            catch (Exception ex)
+            else
             {
-                return BadRequest(new APIResponse<TaskEntity>(false, ex.Message, null));
+                return BadRequest(task);
             }
         }
     }

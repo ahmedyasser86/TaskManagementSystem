@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TaskManagementSystem.Application.Interfaces;
+﻿using TaskManagementSystem.Application.Interfaces;
 using TaskManagementSystem.Core.Entities;
 using TaskManagementSystem.Core.Helpers;
 using TaskManagementSystem.Infrastructure.Interfaces;
@@ -14,27 +9,27 @@ namespace TaskManagementSystem.Application.Services
     {
         private readonly ITaskRepository repository = repository;
 
-        public async Task<TaskEntity> AddTask(TaskEntity entity)
+        public async Task<ResponseBase> AddTask(TaskEntity entity)
         {
             return await repository.Insert(entity);
         }
 
-        public async Task DeleteTask(int id)
+        public async Task<ResponseBase> DeleteTask(int id)
         {
-            await repository.Delete(id);
+            return await repository.Delete(id);
         }
 
-        public async Task<TaskEntity> EditTask(TaskEntity entity)
+        public async Task<ResponseBase> EditTask(TaskEntity entity)
         {
             return await repository.Update(entity);
         }
 
-        public async Task<TaskEntity> GetTaskById(int id)
+        public async Task<ResponseBase> GetTaskById(int id)
         {
             return await repository.Get(id);
         }
 
-        public async Task<PaginatedList<TaskEntity>> GetTasks(int page, int pageSize, string? search)
+        public async Task<ResponseBase> GetTasks(int page, int pageSize, string? search)
         {
             return await repository.Get(page, pageSize, search);
         }
