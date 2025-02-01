@@ -1,0 +1,14 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <p class="m-auto px-2">@User.Identity?.Name.Split('@').First()</p>
+    <a class="btn btn-primary mx-1" asp-action="Logout" asp-controller="Account">Log Out</a>
+}
+else
+{
+    <a class="btn btn-primary mx-1" asp-controller="Account" asp-action="Login">Sign In</a>
+    <a class="btn btn-success mx-1" asp-controller="Account" asp-action="SignUp">Sign Up</a>
+}

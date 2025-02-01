@@ -23,6 +23,11 @@ namespace TaskManagementSystem.API.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            if (!model.Email.Trim().Equals(model.EmailConfirmation.Trim(), StringComparison.CurrentCultureIgnoreCase))
+            {
+                return BadRequest(new ResponseBase(false, model, "Email Confirmation must be same as email"));
+            }
+
             var result = await authService.RegisterAsync(model.Email, model.Password);
 
             if (!result.Success)
@@ -37,7 +42,7 @@ namespace TaskManagementSystem.API.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var res = await authService.LoginAsync(model.Email, model.Password);
+            var res = await authService.GetTokenAsync(model.Email, model.Password);
             if (!res.Success)
                 return Unauthorized();
 

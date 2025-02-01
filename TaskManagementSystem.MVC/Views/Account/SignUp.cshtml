@@ -1,0 +1,33 @@
+﻿@{
+    ViewData["Title"] = "Sign Up";
+}
+@using TaskManagementSystem.Core.Helpers
+@model ResponseBase?
+
+<partial name="/Views/Shared/_MessagePartial.cshtml" model="Model" />
+
+<form method="post" action="SignUp">
+    <div class="mt-lg-2">
+        <div class="col-lg-5 m-auto card p-5">
+            <div class="form-floating mb-3">
+                <input required type="email" class="form-control" id="floatingInput" placeholder="name@example.com" name="Email">
+                <label for="floatingInput">Email address</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input required type="email" class="form-control" id="floatingInput2" placeholder="name@example.com" name="EmailConfirmation">
+                <label for="floatingInput2">Email Confirmation</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input required type="password" class="form-control" id="floatingPassword" placeholder="Password" name="Password">
+                <label for="floatingPassword">Password</label>
+            </div>
+
+            <div class="d-grid">
+                <button class="btn btn-lg btn-primary btn-login text-uppercase fw-bold mb-2" type="submit">Sign in</button>
+                <div class="text-center">
+                    Already User? <a class="small" asp-action="SignIn">Sign In</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

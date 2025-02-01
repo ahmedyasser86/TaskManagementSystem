@@ -15,7 +15,7 @@ namespace TaskManagementSystem.Application.Services
         private readonly SignInManager<IdentityUser> signInManager = signInManager;
         private readonly IJwtTokenGenerator jwtTokenGenerator = jwtTokenGenerator;
 
-        public async Task<ResponseBase> LoginAsync(string email, string password)
+        public async Task<ResponseBase> GetTokenAsync(string email, string password)
         {
             var user = await userManager.FindByEmailAsync(email);
             if (user == null || !await userManager.CheckPasswordAsync(user, password))
@@ -33,6 +33,21 @@ namespace TaskManagementSystem.Application.Services
                 Token = jwtTokenGenerator.GenerateToken(user, roles, userClaims)
             }
             );
+        }
+
+        public async Task<ResponseBase> LogInAsync(string email, string password)
+        {
+            var res = await signInManager.PasswordSignInAsync(email, password, false, false);
+
+            if(res.Succeeded)
+                return new ResponseBase(true, null);
+            else
+                return new ResponseBase(false, new { Email = email, Password = password }, "Invalid email or password");
+        }
+
+        public async Task LogOutAsync()
+        {
+            await signInManager.SignOutAsync();
         }
 
         public async Task<ResponseBase> RegisterAsync(string email, string password)
